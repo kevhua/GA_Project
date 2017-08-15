@@ -137,4 +137,3 @@ class Replicator:
                 index = randint(0, len(population)-1)
             population[index] = i
         return population
-                
