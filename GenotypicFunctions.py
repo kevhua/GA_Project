@@ -1,3 +1,4 @@
+import pyautogui
 from pyautogui import *
 # --------------------------------
 
@@ -30,14 +31,28 @@ class Converter:
                   "11001": lambda: not keyDown('b') and not keyDown('down'),
                   "11010": lambda: not keyUp('a') and not keyUp('down'),
                   "11011": lambda: not keyUp('b') and not keyUp('down'),
-                  "11100": lambda: None,
-                  "11101": lambda: None,
-                  "11110": lambda: None,
-                  "11111": lambda: None }
+                  "11100": lambda: not keyDown('a') and not keyDown('b'),
+                  "11101": lambda: not keyUp('a') and not keyUp('b'),
+                  "11110": lambda: keyDown('right'),
+                  "11111": lambda: keyDown('a') }
+
+class GenotypeUnit:
+    def __init__(self, value):
+        self.__value = value
+    def __getitem__(self, key):
+        return self.__value[key]
+    def __setitem__(self, key, item):
+        self.__value[key] = item
+    def getLength(self):
+        return len(self.__value)
+    def phenotype(self):
+        Converter.phenoDict[self.__value]()
 
 class Genotype:
     def __init__(self, collection):
-        self.__genoUnitCollection = collection
+        self.__genoUnitCollection = []
+        for i in collection:
+            self.__genoUnitCollection.append(GenotypeUnit(i))
         self.__fitness = 0
     def __getitem__(self, key):
         return self.__genoUnitCollection[key]
@@ -59,23 +74,11 @@ class Genotype:
         return len(self.__genoUnitCollection)
     def getFitness(self):
         return self.__fitness
+    def getCollection(self):
+        return self.__genoUnitCollection
     def phenotype(self):
-        phenoCollection = []
+        pyautogui.PAUSE = 1
         for i in self.__genoUnitCollection:
-            phenoCollection += i.phenotype()
+            i.phenotype()
         # do screen shot
         # update fitness
-
-class GenotypeUnit:
-    def __init__(self, value):
-        self.__value = value
-    def __getitem__(self, key):
-        return self.__value[key]
-    def __setitem__(self, key, item):
-        self.__value[key] = item
-    def getLength(self):
-        return len(self.__value)
-    def phenotype(self):
-        Converter.phenoDict[self.__value]()
-
-
