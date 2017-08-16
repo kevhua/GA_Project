@@ -1,5 +1,14 @@
 # GA_Project
 
+**Dependencies:**
+- pyautogui
+- PIL (Image, ImageFilter, ImageGrab, ImageEnhance)
+- os
+- pytesser (image_to_string)
+- string
+- random (randint)
+
+
 Status:
 
 TASK | PROGRESS
