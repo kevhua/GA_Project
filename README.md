@@ -8,6 +8,6 @@ Status:
   - Recombiner                                : COMPLETE
   - Replicator                                : COMPLETE
   - Image Recognition for Fitness Measurement : COMPLETE
-  - Main Loop                                 : IN-PROGRESS
-  - Trials                                    : TO-DO
+  - Main Loop                                 : COMPLETE
+  - Trials                                    : IN-PROGRESS
   - Calculations/Statistics                   : TO-DO
