@@ -1,5 +1,8 @@
 import pyautogui
 from pyautogui import *
+from PIL import Image, ImageFilter, ImageGrab, ImageEnhance
+from pytesser import image_to_string
+import string
 # --------------------------------
 
 class Converter:
@@ -80,5 +83,18 @@ class Genotype:
         pyautogui.PAUSE = 1
         for i in self.__genoUnitCollection:
             i.phenotype()
-        # do screen shot
-        # update fitness
+        # Grab screenshot and crop score area
+        screenshot = ImageGrab.grab()
+        scoreRectangle = (560, 650, 660, 680)
+        cropped_rectangle = screenshot.crop(scoreRectangle)
+        # Filter and enhance area to better recognize digits
+        cropped_rectangle = cropped_rectangle.filter(ImageFilter.MedianFilter())
+        enhancer = ImageEnhance.Contrast(cropped_rectangle)
+        cropped_rectangle = enhancer.enhance(2)
+        cropped_rectangle = cropped_rectangle.convert('1')
+        text = image_to_string(cropped_rectangle)
+        # Remove non-digits from score
+        all = string.maketrans('','')
+        nodigits = all.translate(all, string.digits)
+        # Convert to Int and save as Fitness
+        self.__fitness = int(text.translate(all, nodigits))
