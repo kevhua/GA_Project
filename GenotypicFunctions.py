@@ -3,6 +3,7 @@ from pyautogui import *
 from PIL import Image, ImageFilter, ImageGrab, ImageEnhance
 from pytesser import image_to_string
 import string
+
 # --------------------------------
 
 class Converter:
@@ -81,20 +82,25 @@ class Genotype:
         return self.__genoUnitCollection
     def phenotype(self):
         pyautogui.PAUSE = 1
+        counter = 0
         for i in self.__genoUnitCollection:
             i.phenotype()
-        # Grab screenshot and crop score area
-        screenshot = ImageGrab.grab()
-        scoreRectangle = (560, 650, 660, 680)
-        cropped_rectangle = screenshot.crop(scoreRectangle)
-        # Filter and enhance area to better recognize digits
-        cropped_rectangle = cropped_rectangle.filter(ImageFilter.MedianFilter())
-        enhancer = ImageEnhance.Contrast(cropped_rectangle)
-        cropped_rectangle = enhancer.enhance(2)
-        cropped_rectangle = cropped_rectangle.convert('1')
-        text = image_to_string(cropped_rectangle)
-        # Remove non-digits from score
-        all = string.maketrans('','')
-        nodigits = all.translate(all, string.digits)
-        # Convert to Int and save as Fitness
-        self.__fitness = int(text.translate(all, nodigits))
+            if counter%5 == 0:
+                # Grab screenshot and crop score area
+                screenshot = ImageGrab.grab()
+                scoreRectangle = (560, 650, 660, 680)
+                cropped_rectangle = screenshot.crop(scoreRectangle)
+                # Filter and enhance area to better recognize digits
+                cropped_rectangle = cropped_rectangle.filter(ImageFilter.MedianFilter())
+                enhancer = ImageEnhance.Contrast(cropped_rectangle)
+                cropped_rectangle = enhancer.enhance(2)
+                cropped_rectangle = cropped_rectangle.convert('1')
+                text = image_to_string(cropped_rectangle)
+                # Remove non-digits from score
+                all = string.maketrans('','')
+                nodigits = all.translate(all, string.digits)
+                # Convert to Int and save as Fitness
+                if text.translate(all, nodigits) == '':
+                    break
+                self.__fitness = int(text.translate(all, nodigits))
+            counter += 1
