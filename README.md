@@ -7,7 +7,7 @@ Status:
   - Mutator                                   : COMPLETE
   - Recombiner                                : COMPLETE
   - Replicator                                : COMPLETE
-  - Image Recognition for Fitness Measurement : IN-PROGRESS
+  - Image Recognition for Fitness Measurement : COMPLETE
   - Main Loop                                 : IN-PROGRESS
   - Trials                                    : TO-DO
   - Calculations/Statistics                   : TO-DO
