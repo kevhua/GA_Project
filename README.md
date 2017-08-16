@@ -1,5 +1,7 @@
 # GA_Project
 
+**Python Version: 2.7.13**
+
 **Dependencies:**
 - pyautogui
 - PIL (Image, ImageFilter, ImageGrab, ImageEnhance)
