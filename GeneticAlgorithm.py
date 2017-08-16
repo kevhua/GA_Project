@@ -1,5 +1,9 @@
+import pyautogui
+from pyautogui import *
 from random import randint
-from GenotypicFunctions import Genotype
+from GenotypicFunctions import Genotype, Converter
+import os
+
 # --------------------------------
 # 
 # --------------------------------
@@ -23,6 +27,15 @@ class Generation:
         self.__subpopulation = self.__recombiner.recombine(self.__subpopulation)
     def replicate(self):
         self.__population = self.__replicator.replicate(self.__population, self.__subpopulation)
+    def cycle(self):
+        for i in range(0, len(self.__population)):
+            self.__population[i].phenotype()
+        select()
+        mutate()
+        recombine()
+        replicate()
+    def getPopulation(self):
+        return self.__population
 
 class Selector:
     def __init__(self):
@@ -137,3 +150,47 @@ class Replicator:
                 index = randint(0, len(population)-1)
             population[index] = i
         return population
+
+def main():
+    with open("logfile.txt", "a") as log:
+        tstart = time.time()
+        log.write("Current Time: {}".format(tstart))
+        keys = list(Converter.phenoDict.keys())
+        pop1 = []; pop2 = []
+        for i in range(0, 20):
+            pop1 = keys[randint(0, len(keys)-1)]
+            pop2 = keys[randint(0, len(keys)-1)]
+        p1 = Generation(Selector(), Mutator("Bit Flip"), Recombiner("Single"), Replicator("Generational"), pop1)
+        p2 = Generation(Selector(), Mutator("Inversion"), Recombiner("Uniform"), Replicator("Steady State"), pop2)
+        log.write("Parameters: \n  Population 1: \n    - Selector(TOURNAMENT)\n    - Mutator(BIT FLIP)\n    - Recombiner(SINGLE POINT)\n    - Replicator(GENERATIONAL)\n")
+        log.write("  Population 2: \n    - Selector(TOURNAMENT)\n    - Mutator(INVERSION)\n    - Recombiner(UNIFORM)\n    - Replicator(STEADY STATE)\n\n Beginning Trials...\n")
+        for i in range(1, 101):
+            log.write("------------------------------------------------------------\n")
+            log.write("Generation {} for Population 1:\n".format(i))
+            os.startfile("C:/Users/kevin/Downloads/kirbys_dream_land/kirby.gb")
+            time.sleep(3)
+            keyDown('enter')
+            sleep(7)
+            p1.cycle()
+            for i in p1.getPopulation():
+                log.write("{} : Fitness={}\n".format(i.stringify(), i.getFitness()))
+            log.write("------------------------------------------------------------\n")
+            os.system("TASKKILL /F /IM bgb.exe")
+            log.write("Generation {} for Population 2:\n", i)
+            os.startfile("C:/Users/kevin/Downloads/kirbys_dream_land/kirby.gb")
+            time.sleep(3)
+            keyDown('enter')
+            sleep(7)
+            p2.cycle()
+            for i in p2.getPopulation():
+                log.write("{} : Fitness={}\n".format(i.stringify(), i.getFitness()))
+            log.write("------------------------------------------------------------\n")
+            os.system("TASKKILL /F /IM bgb.exe")
+        tend = time.time()
+        log.write("Trials Completed. {} Total Generations!\n".format(100))
+        log.write("Current Time: {} \n Elapsed Time: {}".format(tend, tend-tstart))
+        log.close()
+        
+if __name__ == "__main__":
+    main()
+
